@@ -1,41 +1,46 @@
 import { Router } from "express";
 import { generateMockUsers, generateMockPets } from "../utils/mocking.js";
-import UserModel from "../models/User.js";
-import PetModel from "../models/Pet.js";
+import UserModel from "../models/user.model.js";
+import PetModel from "../models/pet.model.js";
 
 const router = Router();
 
-router.get("/mockingpets", (req, res) => {
-  const pets = generateMockPets(10);
-  res.status(200).json(pets);
-});
-
+/**
+ * @swagger
+ * /api/mocks/mockingusers:
+ *   get:
+ *     summary: Genera usuarios mock
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios mock generados
+ */
 router.get("/mockingusers", async (req, res) => {
   const users = await generateMockUsers(50);
-  res.status(200).json(users);
+  res.status(200).send(users);
+});
+
+router.get("/mockingpets", async (req, res) => {
+  const pets = generateMockPets(20);
+  res.status(200).send(pets);
 });
 
 router.post("/generateData", async (req, res) => {
-  try {
-    const { users, pets } = req.body;
+  const { users, pets } = req.body;
 
-    if (!users || !pets) {
-      return res.status(400).json({ error: "Parametros invalidos" });
-    }
-
-    const mockUsers = await generateMockUsers(users);
-    const mockPets = generateMockPets(pets);
-
-    await UserModel.insertMany(mockUsers);
-    await PetModel.insertMany(mockPets);
-
-    res.status(201).json({
-      users,
-      pets
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  if (!users || !pets) {
+    return res.status(400).send({ error: "Faltan parametros" });
   }
+
+  const mockUsers = await generateMockUsers(users);
+  const mockPets = generateMockPets(pets);
+
+  await UserModel.insertMany(mockUsers);
+  await PetModel.insertMany(mockPets);
+
+  res.status(201).send({
+    usersInserted: mockUsers.length,
+    petsInserted: mockPets.length
+  });
 });
 
 export default router;
