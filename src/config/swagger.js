@@ -4,11 +4,16 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Mocking Users API",
-      version: "1.0.0"
+      title: "Adoption API",
+      version: "1.0.0",
+      description: "API para gestion de usuarios, mascotas y adopciones"
     }
   },
-  apis: ["./src/routes/mocks.router.js"]
+  apis: [
+    "./src/routes/mocks.router.js",
+    "./src/routes/adoption.router.js"
+  ]
+  
 };
 
 export const swaggerSpecs = swaggerJSDoc(options);

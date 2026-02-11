@@ -1,19 +1,10 @@
 import { Router } from "express";
 import { generateMockUsers, generateMockPets } from "../utils/mocking.js";
-import UserModel from "../models/user.model.js";
-import PetModel from "../models/pet.model.js";
+import UserModel from "../models/User.js";
+import PetModel from "../models/Pet.js";
 
 const router = Router();
 
-/**
- * @swagger
- * /api/mocks/mockingusers:
- *   get:
- *     summary: Genera usuarios mock
- *     responses:
- *       200:
- *         description: Lista de usuarios mock generados
- */
 router.get("/mockingusers", async (req, res) => {
   const users = await generateMockUsers(50);
   res.status(200).send(users);
